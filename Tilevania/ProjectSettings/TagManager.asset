@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ladder
   - Ground
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -19,9 +20,9 @@ TagManager:
   - Background
   - Bouncing
   - Enemies
-  - 
-  - 
-  - 
+  - Hazards
+  - Bullets
+  - Interactables
   - 
   - 
   - 
@@ -52,8 +53,14 @@ TagManager:
   - name: Platforms
     uniqueID: 2804437949
     locked: 0
+  - name: Hazards
+    uniqueID: 3448543875
+    locked: 0
   - name: Enemies
     uniqueID: 4081614781
+    locked: 0
+  - name: Interactables
+    uniqueID: 3645171705
     locked: 0
   - name: Player
     uniqueID: 399470355

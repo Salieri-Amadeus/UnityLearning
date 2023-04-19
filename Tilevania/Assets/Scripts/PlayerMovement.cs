@@ -15,12 +15,15 @@ public class PlayerMovement : MonoBehaviour
     bool playerHasHorizontalSpeed = false;
     bool playerHasVerticalSpeed = false;
     bool isAlive = true;
+    float direction = 1f;
 
     float startGravityScale;
 
     [SerializeField] float moveSpeed = 10f;
     [SerializeField] float jumpSpeed = 10f;
     [SerializeField] float climbSpeed = 10f;
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform bulletSpawnPoint;
     void Start()
     {
         rigidBody2D = GetComponent<Rigidbody2D>();
@@ -40,8 +43,8 @@ public class PlayerMovement : MonoBehaviour
         Run();
         Climb();
         Die();
-        FlipSprite();
         InputDetect();
+        FlipSprite();
     }
 
     void Run()
@@ -82,10 +85,20 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void OnFire(InputValue value){
+        if(!isAlive){
+            return;
+        }
+        if(value.isPressed){
+            Instantiate(bullet, bulletSpawnPoint.position, transform.rotation);
+        }
+    }
+
     void FlipSprite(){
         if(playerHasHorizontalSpeed){
-            transform.localScale = new Vector2(Mathf.Sign(rigidBody2D.velocity.x), 1f);
+            direction = Mathf.Sign(rigidBody2D.velocity.x);
         }
+        transform.localScale = new Vector2(direction, 1f);
     }
 
     void InputDetect(){
@@ -94,11 +107,12 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Die(){
-        if(playerCollider2D.IsTouchingLayers(LayerMask.GetMask("Enemies"))){
+        if(playerCollider2D.IsTouchingLayers(LayerMask.GetMask("Enemies", "Hazards"))){
             isAlive = false;
             animator.SetTrigger("Dying");
             rigidBody2D.velocity = new Vector2(0f, 10f);
             spriteRenderer.color = new Color(1f, 0f, 0f, spriteRenderer.color.a);
+            FindObjectOfType<GameSession>().ProcessPlayerDeath();
         }
     }
 
